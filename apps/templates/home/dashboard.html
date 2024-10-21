@@ -1,0 +1,155 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+<div class="content">
+    <div class="row">
+        <!-- Videos Section -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Videos</h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <ul id="video-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audios Section -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Audios</h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <ul id="audio-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-category">Output</h5>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <ul id="output-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Playing Media -->
+<div class="modal" id="mediaModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Media Player</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <video id="videoPlayer" controls style="display: none; width: 100%;">
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <audio id="audioPlayer" controls style="display: none; width: 100%;">
+                    <source id="audioSource" src="" type="audio/mpeg">
+                    Your browser does not support the audio tag.
+                </audio>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    // Use the username passed from Flask
+    const username = "{{ username }}";  // This gets the username from the Flask session
+
+    async function fetchMediaData(username) {
+        const response = await fetch(`/api/media/${username}`); // Use username in the fetch URL
+        if (!response.ok) {
+            console.error('Failed to fetch media data:', response.statusText);
+            return; // Return early if there was an error
+        }
+        const mediaData = await response.json();
+        return mediaData;
+    }
+
+    async function displayMedia() {
+        const mediaData = await fetchMediaData(username);
+
+        if (!mediaData) {
+            console.error('No media data available');
+            return; // Return if media data is undefined
+        }
+
+        const videoList = document.getElementById('video-list');
+        const audioList = document.getElementById('audio-list');
+        const outputList = document.getElementById('output-list');
+
+        // Populate Video List
+        mediaData.videos.forEach(video => {
+            const li = document.createElement('li');
+            li.innerText = video.name;
+            li.onclick = () => playMedia(video.file, 'video');
+            videoList.appendChild(li);
+        });
+
+        // Populate Audio List
+        mediaData.audios.forEach(audio => {
+            const li = document.createElement('li');
+            li.innerText = audio.name;
+            li.onclick = () => playMedia(audio.file, 'audio');
+            audioList.appendChild(li);
+        });
+
+        // Populate Output List
+        mediaData.outputs.forEach(output => {
+            const li = document.createElement('li');
+            li.innerText = output.name;
+            li.onclick = () => playMedia(output.file, 'video'); // Assuming output is video
+            outputList.appendChild(li);
+        });
+    }
+
+    function playMedia(file, type) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const videoSource = document.getElementById('videoSource');
+        const audioSource = document.getElementById('audioSource');
+
+        if (type === 'video') {
+            videoSource.src = file;
+            videoPlayer.style.display = 'block';
+            audioPlayer.style.display = 'none';
+            videoPlayer.load();
+        } else {
+            audioSource.src = file;
+            audioPlayer.style.display = 'block';
+            videoPlayer.style.display = 'none';
+            audioPlayer.load();
+        }
+
+        // Show the modal
+        $('#mediaModal').modal('show');
+    }
+
+    // Call displayMedia when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', displayMedia);
+</script>
+{% endblock javascripts %}

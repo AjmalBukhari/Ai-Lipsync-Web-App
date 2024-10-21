@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Preview {% endblock %}
+
+{% block content %}
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-plain">
+        <div class="card-header">
+          <h2>Preview</h2>
+        </div>
+        <div class="card-body">
+          <video controls src="{{ output_video_url }}" width="100%"></video>
+          <div class="buttons">
+            <a href="/reprocess" class="btn btn-secondary">Re-process</a>
+            <a href="{{ output_video_url }}" download class="btn btn-success">Download</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

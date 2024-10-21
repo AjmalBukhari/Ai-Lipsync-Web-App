@@ -1,0 +1,405 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Lip Sync{% endblock %}
+
+{% block stylesheets %}
+<style>
+  .row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .upload-section .title h3 {
+    font-size: 24px;
+    align-items: center;
+    color: #ffffff;
+  }
+
+  .upload-section {
+    border: 2px dashed #6c63ff;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+    position: relative;
+    height: 250px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .upload-section:hover {
+    border-color: #ff4081;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .remove-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+
+  .progress {
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .progress-bar {
+    width: 0;
+    height: 8px;
+    background-color: #6c63ff;
+    border-radius: 5px;
+  }
+
+  .input-section {
+    display: flex;
+    flex-direction: rwo;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: left;
+    width: 50%;
+  }
+
+  .form-row>div {
+    display: flex;
+    flex-direction: row;
+    margin: 0 5px;
+  }
+
+  .form-row .time>div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+  }
+
+  .form-row .padding>div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+  }
+
+  .form-row .opname>div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+  }
+
+  .form-row .models>div {
+    display: flex;
+    flex-direction: column;
+    margin: 0 5px;
+  }
+
+  .form-row label {
+    font-size: 12px;
+    color: #ffffff;
+    margin-bottom: 5px;
+  }
+
+  .form-row input,
+  .form-row select {
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #6c63ff;
+    background-color: #333;
+    color: white;
+    outline: none;
+    width: 150px;
+  }
+
+  .form-row input:focus,
+  .form-row select:focus {
+    border-color: #ff4081;
+  }
+
+  .form-row .form-submit {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    width: 100%;
+  }
+
+  .btn {
+    background-color: #6c63ff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #ff4081;
+  }
+</style>
+{% endblock stylesheets %}
+
+
+{% block content %}
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-plain">
+        <div class="card-header">
+          <h2 style="color: #ffffff; text-align: center;">Lip Sync</h2>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="upload-section" id="upload-video-section">
+              <div class="title">
+                <h3>Upload Video</h3>
+              </div>
+              Drag & drop video files here, or click to upload video
+              <input type="file" id="video-input" accept="video/*" style="display: none;">
+              <div class="progress" id="video-progress-bar">
+                <div class="progress-bar" id="video-progress-bar-inner"></div>
+              </div>
+            </div>
+
+            <div class="upload-section" id="upload-audio-section">
+              <div class="title">
+                <h3>Upload Audio</h3>
+              </div>
+              Drag & drop audio files here, or click to upload audio
+              <input type="file" id="audio-input" accept="audio/*" style="display: none;">
+              <div class="progress" id="audio-progress-bar">
+                <div class="progress-bar" id="audio-progress-bar-inner"></div>
+              </div>
+            </div>
+          </div>
+
+          <form action="{{ url_for('home_blueprint.process_lipsync') }}" method="POST" class="input-section">
+            <div class="form-row">
+              <div class="time">
+                <div>
+                  <label for="start-time">Start Time (s):</label>
+                  <input type="number" name="start-time" value="0" id="start-time" required>
+                </div>
+                <div>
+                  <label for="end-time">End Time (s):</label>
+                  <input type="number" name="end-time" placeholder="0" id="end-time" required>
+                </div>
+              </div>
+              <div class="padding">
+                <div>
+                  <label for="padding-top">Padding Top:</label>
+                  <input type="number" name="padding-top" value="0" id="padding-top">
+                </div>
+                <div>
+                  <label for="padding-right">Padding Right:</label>
+                  <input type="number" name="padding-right" value="0" id="padding-right">
+                </div>
+                <div>
+                  <label for="padding-left">Padding Left:</label>
+                  <input type="number" name="padding-left" value="0" id="padding-left">
+                </div>
+                <div>
+                  <label for="padding-bottom">Padding Bottom:</label>
+                  <input type="number" name="padding-bottom" value="0" id="padding-bottom">
+                </div>
+              </div>
+              <div class="opname">
+                <div>
+                  <label for="output-filename">Output Filename:</label>
+                  <input type="text" name="output-filename" placeholder="Enter file name..." id="output-filename"
+                    required>
+                </div>
+              </div>
+              <div class="models">
+                <div>
+                  <label for="model-type">Select Model:</label>
+                  <select name="model-type" id="model-type">
+                    <option value="normal">Normal</option>
+                    <option value="gan">GAN</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-submit">
+                <button type="submit" class="btn">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <button id="process-button" style="display: none;" class="btn btn-primary">Process</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+
+{% block javascripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const videoInput = document.getElementById('video-input');
+    const audioInput = document.getElementById('audio-input');
+    const videoSection = document.getElementById('upload-video-section');
+    const audioSection = document.getElementById('upload-audio-section');
+    const videoProgressBar = document.getElementById('video-progress-bar');
+    const audioProgressBar = document.getElementById('audio-progress-bar');
+    const videoProgressBarInner = document.getElementById('video-progress-bar-inner');
+    const audioProgressBarInner = document.getElementById('audio-progress-bar-inner');
+    const processButton = document.getElementById('process-button');
+    const wav2lipOptions = document.getElementById('wav2lip-options');
+    const wav2lipForm = document.getElementById('wav2lip-form');
+
+    let videoUploaded = false;
+    let audioUploaded = false;
+
+    videoSection.addEventListener('click', () => videoInput.click());
+    audioSection.addEventListener('click', () => audioInput.click());
+
+    videoInput.addEventListener('change', function () {
+      handleFileUpload(videoInput.files[0], 'video', updateVideoProgress, displayVideoPreview);
+    });
+
+    audioInput.addEventListener('change', function () {
+      handleFileUpload(audioInput.files[0], 'audio', updateAudioProgress, displayAudioPreview);
+    });
+
+    function handleFileUpload(file, type, progressCallback, previewCallback) {
+      const formData = new FormData();
+      formData.append(type, file);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `/upload-${type}`, true);
+
+      xhr.upload.onprogress = function (event) {
+        if (event.lengthComputable) {
+          const percentComplete = (event.loaded / event.total) * 100;
+          progressCallback(percentComplete);
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          previewCallback(file);
+          if (type === 'video') {
+            videoUploaded = true;
+          } else if (type === 'audio') {
+            audioUploaded = true;
+          }
+
+          if (videoUploaded && audioUploaded) {
+            processButton.style.display = 'block';
+          }
+        } else {
+          alert('Error uploading file. Please try again.');
+        }
+      };
+
+      xhr.send(formData);
+    }
+
+    function updateVideoProgress(percent) {
+      videoProgressBar.style.display = 'block';
+      videoProgressBarInner.style.width = percent + '%';
+    }
+
+    function updateAudioProgress(percent) {
+      audioProgressBar.style.display = 'block';
+      audioProgressBarInner.style.width = percent + '%';
+    }
+
+    function displayVideoPreview(file) {
+      const url = URL.createObjectURL(file);
+      videoSection.innerHTML = ` 
+        <video controls src="${url}" width="100%" height="100%"></video> 
+        <button class="remove-button" onclick="removePreview('video')">×</button>`;
+    }
+
+    function displayAudioPreview(file) {
+      const url = URL.createObjectURL(file);
+      audioSection.innerHTML = ` 
+        <audio controls src="${url}" width="100%" height="100%"></audio> 
+        <button class="remove-button" onclick="removePreview('audio')">×</button>`;
+    }
+
+    window.removePreview = function (type) {
+      if (type === 'video') {
+        videoInput.value = ''; // Reset input
+        videoUploaded = false;
+        videoSection.innerHTML = `
+          <div class="title">
+            <h3>Upload Video</h3>
+          </div>
+          Drag & drop video files here, or click to upload video`;
+        videoProgressBar.style.display = 'none';
+        processButton.style.display = 'none';
+      } else if (type === 'audio') {
+        audioInput.value = ''; // Reset input
+        audioUploaded = false;
+        audioSection.innerHTML = `
+          <div class="title">
+            <h3>Upload Audio</h3>
+          </div>
+          Drag & drop audio files here, or click to upload audio`;
+        audioProgressBar.style.display = 'none';
+        processButton.style.display = 'none';
+      }
+    };
+
+    processButton.addEventListener('click', function () {
+      // Make a request to the /process route
+      const processRequest = new XMLHttpRequest();
+      processRequest.open('GET', '/process', true); // Use GET method to trigger processing
+      processRequest.onload = function () {
+        if (processRequest.status === 200) {
+          window.location.href = processRequest.responseURL;
+        } else {
+          console.error('Error processing files:', processRequest.responseText);
+          alert('Error processing files. Please try again.');
+        }
+      };
+
+      processRequest.onerror = function () {
+        console.error('Network error while processing files.');
+        alert('Network error while processing files.');
+      };
+
+      processRequest.onerror = function () {
+        alert('Network error while processing files.');
+      };
+
+      processRequest.send();
+    });
+
+    wav2lipForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(wav2lipForm);
+      // Submit the form data via AJAX (POST)
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', '/process', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          window.location.href = '/process';
+        } else {
+          alert('Error submitting form. Please try again.');
+        }
+      };
+      xhr.send(formData);
+    });
+  });
+</script>
+{% endblock javascripts %}

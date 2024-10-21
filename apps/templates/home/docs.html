@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Documentation {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-plain">
+          <div class="card-header">
+            <h2>Documentation</h2>
+          </div>
+          <div class="card-body">
+            <p>
+              Welcome to the AI Lipsync Documentation! Here you will find a variety of resources to help you understand 
+              and use our web app effectively.
+            </p>
+            
+            <h4>User Guides</h4>
+            <ul>
+              <li><a href="/docs/getting-started">Getting Started Guide</a></li>
+              <li><a href="/docs/uploading-audio">How to Upload Audio</a></li>
+              <li><a href="/docs/creating-animations">Creating Animations</a></li>
+              <li><a href="/docs/exporting-videos">Exporting Your Videos</a></li>
+            </ul>
+
+            <h4>API Documentation</h4>
+            <p>
+              For developers looking to integrate with our platform, please refer to the <a href="/docs/api">API Documentation</a>. 
+              It includes information on endpoints, request formats, and response data.
+            </p>
+
+            <h4>Tutorials</h4>
+            <ul>
+              <li><a href="/docs/tutorials/customizing-characters">Customizing Characters</a></li>
+              <li><a href="/docs/tutorials/advanced-lipsync-techniques">Advanced Lipsync Techniques</a></li>
+              <li><a href="/docs/tutorials/integrating-with-3rd-party-tools">Integrating with Third-Party Tools</a></li>
+            </ul>
+
+            <h4>Release Notes</h4>
+            <p>
+              Stay updated on the latest features and improvements by checking out our <a href="/docs/release-notes">Release Notes</a>.
+            </p>
+
+            <h4>Frequently Asked Questions</h4>
+            <p>
+              For quick answers to common questions, visit our <a href="/faq">FAQ</a> section.
+            </p>
+
+            <h4>Need Help?</h4>
+            <p>
+              If you need further assistance, please check our <a href="/support">Support</a> page for contact options 
+              or community forums where you can ask for help.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script>
+    $(document).ready(function() {
+      // Optional: Additional JS code for interactive documentation features
+    });
+  </script>
+
+{% endblock javascripts %}
