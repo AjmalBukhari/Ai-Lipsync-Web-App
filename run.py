@@ -38,7 +38,7 @@ if DEBUG:
 
 
 # Set up ngrok only if in debug mode
-if DEBUG:
+if not DEBUG:
     # Kill any existing ngrok processes to reset before starting a new tunnel
     subprocess.call(['taskkill', '/F', '/IM', 'ngrok.exe'])
 
