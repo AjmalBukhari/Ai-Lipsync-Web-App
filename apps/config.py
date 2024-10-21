@@ -21,14 +21,11 @@ class Config(object):
     # DB_PORT = os.getenv('DB_PORT', '5432')
     # DB_NAME = os.getenv('DB_NAME', 'postgres')
 
-    DB_ENGINE = 'postgresql'
-    DB_USERNAME = 'postgres'
-    DB_PASS = 'virus'
-    DB_HOST = 'localhost'
-    DB_PORT = '5432'
-    DB_NAME = 'postgres'
+    DB_ENGINE = 'sqlite'
+    DB_NAME = 'database.db'  # Name of your SQLite database file
 
-    SQLALCHEMY_DATABASE_URI = f'{DB_ENGINE}://{DB_USERNAME}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
+    # For SQLite, the URI format is different
+    SQLALCHEMY_DATABASE_URI = f'{DB_ENGINE}:///{DB_NAME}'
     print("Database URL:", SQLALCHEMY_DATABASE_URI)
 
     # Assets Management
