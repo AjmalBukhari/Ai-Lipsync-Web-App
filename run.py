@@ -7,7 +7,7 @@ from apps.config import config_dict
 from apps import create_app, db
 
 from pyngrok import ngrok
-
+import subprocess
 
 # WARNING: Don't run with debug turned on in production!
 DEBUG = (os.getenv('DEBUG', 'False') == 'True')
@@ -38,6 +38,9 @@ if DEBUG:
 
 # Set up ngrok only if in debug mode
 if not DEBUG:
+
+    subprocess.call(['pkill', 'ngrok'])
+    subprocess.call(['ngrok','start', '--none'])
 
     # Set your ngrok authentication token (replace with your actual token)
     NGROK_AUTH_TOKEN = os.getenv("NGROK_AUTH_TOKEN", "63Rprg8vfopGku86TmQz7_5B1i8o1FQqwwKs6N6ucwV")
